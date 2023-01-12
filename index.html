@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <!-- Include the CesiumJS JavaScript and CSS files -->
+  <script src="https://cesium.com/downloads/cesiumjs/releases/1.101/Build/Cesium/Cesium.js"></script>
+  <link href="https://cesium.com/downloads/cesiumjs/releases/1.101/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+  <style type="text/css">
+    body {
+        margin: 0px;
+        overflow: hidden;
+    }
+    #check-m1 { z-index: 1; position: fixed; top: 10px; left: 10px; background-color: #303336; color: #edffff; font: 13.3px Arial; padding: 1px 6px; border-radius: 4px;}
+    #check-m2 { z-index: 1; position: fixed; top: 50px; left: 10px; background-color: #303336; color: #edffff; font: 13.3px Arial; padding: 1px 6px; border-radius: 4px;}
+    #check-m3 { z-index: 1; position: fixed; top: 90px; left: 10px; background-color: #303336; color: #edffff; font: 13.3px Arial; padding: 1px 6px; border-radius: 4px;}
+    #check-m4 { z-index: 1; position: fixed; top: 130px; left: 10px; background-color: #303336; color: #edffff; font: 13.3px Arial; padding: 1px 6px; border-radius: 4px;}
+  </style>
+</head>
+<body>
+  <div id="cesiumContainer"></div>
+  <div id="check-m1">
+    <input type="checkbox" id="m1" name="m1" onchange="m1()" checked/>
+    <label for="m1">見草トンネル（覆工）</label>
+  </div>
+  <div id="check-m2">
+    <input type="checkbox" id="m2" name="m2" onchange="m2()" checked/>
+    <label for="m2">見草トンネル（床）</label>
+  </div>
+  <div id="check-m3">
+    <input type="checkbox" id="m3" name="m3" onchange="m3()" checked/>
+    <label for="m3">地質縦断図</label>
+  </div>
+  <div id="check-m4">
+    <input type="checkbox" id="m4" name="m4" onchange="m4()" checked/>
+    <label for="m4">見草トンネル（点群）</label>
+  </div>
+  <script>
+    Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhNmJmMTkxYi0zNjBjLTRiZDctYTJjMi1kYWI4YTE0NDVhZWQiLCJpZCI6MTAwNzY1LCJpYXQiOjE2NTc1MzE3OTV9.DN7YBLuXtf9TCY6NLlM_en_KTPlDZJ2A1QajiGaK_fY';
+
+    const viewer = new Cesium.Viewer('cesiumContainer', {
+      terrainProvider: Cesium.createWorldTerrain()
+    });
+    viewer.scene.globe.translucency.frontFaceAlpha = 0.5;
+    viewer.scene.globe.translucency.backFaceAlpha = 0.5;
+    viewer.scene.globe.translucency.enabled = true;
+    viewer.scene.screenSpaceCameraController.enableCollisionDetection = false;
+
+    const liningTileset = viewer.scene.primitives.add(
+      new Cesium.Cesium3DTileset({
+        url: Cesium.IonResource.fromAssetId(1495705),
+      })
+    );
+
+    const floorTileset = viewer.scene.primitives.add(
+      new Cesium.Cesium3DTileset({
+        url: Cesium.IonResource.fromAssetId(1495704),
+      })
+    );
+
+    const sectionTileset = viewer.scene.primitives.add(
+      new Cesium.Cesium3DTileset({
+        url: Cesium.IonResource.fromAssetId(1495709),
+      })
+    );
+
+    const pcdTileset = viewer.scene.primitives.add(
+      new Cesium.Cesium3DTileset({
+        url: Cesium.IonResource.fromAssetId(1491360),
+      })
+    );
+    
+    viewer.flyTo(liningTileset);
+
+    function m1() {
+      liningTileset.show = document.getElementById("m1").checked
+    }
+
+    function m2() {
+      floorTileset.show = document.getElementById("m2").checked
+    }
+
+    function m3() {
+      sectionTileset.show = document.getElementById("m3").checked
+    }
+
+    function m4() {
+      pcdTileset.show = document.getElementById("m4").checked
+    }
+
+  </script>
+ </div>
+</body>
+</html>
