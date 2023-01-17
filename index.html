@@ -24,11 +24,11 @@
   </div>
   <div id="check-m2">
     <input type="checkbox" id="m2" name="m2" onchange="m2()" checked/>
-    <label for="m2">美郷トンネル（床）</label>
+    <label for="m2">美郷トンネル（路面）</label>
   </div>
   <div id="check-m3">
     <input type="checkbox" id="m3" name="m3" onchange="m3()" checked/>
-    <label for="m3">地質縦断図</label>
+    <label for="m3">地質縦断図（モデル）</label>
   </div>
   <div id="check-m4">
     <input type="checkbox" id="m4" name="m4" onchange="m4()" checked/>
@@ -47,25 +47,25 @@
 
     const liningTileset = viewer.scene.primitives.add(
       new Cesium.Cesium3DTileset({
-        url: Cesium.IonResource.fromAssetId(1496023),
+        url: Cesium.IonResource.fromAssetId(1501242),
       })
     );
 
     const floorTileset = viewer.scene.primitives.add(
       new Cesium.Cesium3DTileset({
-        url: Cesium.IonResource.fromAssetId(1496022),
+        url: Cesium.IonResource.fromAssetId(1501244),
       })
     );
 
     const sectionTileset = viewer.scene.primitives.add(
       new Cesium.Cesium3DTileset({
-        url: Cesium.IonResource.fromAssetId(1496025),
+        url: Cesium.IonResource.fromAssetId(1501245),
       })
     );
 
     const pcdTileset = viewer.scene.primitives.add(
       new Cesium.Cesium3DTileset({
-        url: Cesium.IonResource.fromAssetId(1493817),
+        url: Cesium.IonResource.fromAssetId(1497734),
       })
     );
     
