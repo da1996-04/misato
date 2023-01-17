@@ -11,16 +11,22 @@
         overflow: hidden;
     }
     #check-m1 { z-index: 1; position: fixed; top: 10px; left: 10px; background-color: #303336; color: #edffff; font: 13.3px Arial; padding: 1px 6px; border-radius: 4px;}
-    #check-m2 { z-index: 1; position: fixed; top: 50px; left: 10px; background-color: #303336; color: #edffff; font: 13.3px Arial; padding: 1px 6px; border-radius: 4px;}
-    #check-m3 { z-index: 1; position: fixed; top: 90px; left: 10px; background-color: #303336; color: #edffff; font: 13.3px Arial; padding: 1px 6px; border-radius: 4px;}
-    #check-m4 { z-index: 1; position: fixed; top: 130px; left: 10px; background-color: #303336; color: #edffff; font: 13.3px Arial; padding: 1px 6px; border-radius: 4px;}
+    #check-m5 { z-index: 1; position: fixed; top: 50px; left: 10px; background-color: #303336; color: #edffff; font: 13.3px Arial; padding: 1px 6px; border-radius: 4px;}
+    #check-m2 { z-index: 1; position: fixed; top: 90px; left: 10px; background-color: #303336; color: #edffff; font: 13.3px Arial; padding: 1px 6px; border-radius: 4px;}
+    #check-m3 { z-index: 1; position: fixed; top: 130px; left: 10px; background-color: #303336; color: #edffff; font: 13.3px Arial; padding: 1px 6px; border-radius: 4px;}
+    #check-m6 { z-index: 1; position: fixed; top: 170px; left: 10px; background-color: #303336; color: #edffff; font: 13.3px Arial; padding: 1px 6px; border-radius: 4px;}
+    #check-m4 { z-index: 1; position: fixed; top: 210px; left: 10px; background-color: #303336; color: #edffff; font: 13.3px Arial; padding: 1px 6px; border-radius: 4px;}
   </style>
 </head>
 <body>
   <div id="cesiumContainer"></div>
   <div id="check-m1">
     <input type="checkbox" id="m1" name="m1" onchange="m1()" checked/>
-    <label for="m1">美郷トンネル（覆工）</label>
+    <label for="m1">美郷トンネル（覆工/ひび割れ表示）</label>
+  </div>
+  <div id="check-m5">
+    <input type="checkbox" id="m5" name="m5" onchange="m5()" />
+    <label for="m5">美郷トンネル（覆工）</label>
   </div>
   <div id="check-m2">
     <input type="checkbox" id="m2" name="m2" onchange="m2()" checked/>
@@ -29,6 +35,10 @@
   <div id="check-m3">
     <input type="checkbox" id="m3" name="m3" onchange="m3()" checked/>
     <label for="m3">地質縦断図（モデル）</label>
+  </div>
+  <div id="check-m6">
+    <input type="checkbox" id="m6" name="m6" onchange="m6()" />
+    <label for="m6">地質縦断図</label>
   </div>
   <div id="check-m4">
     <input type="checkbox" id="m4" name="m4" onchange="m4()" checked/>
@@ -51,6 +61,13 @@
       })
     );
 
+    const liningPlaneTileset = viewer.scene.primitives.add(
+      new Cesium.Cesium3DTileset({
+        url: Cesium.IonResource.fromAssetId(1502608),
+        show: false,
+      })
+    );
+
     const floorTileset = viewer.scene.primitives.add(
       new Cesium.Cesium3DTileset({
         url: Cesium.IonResource.fromAssetId(1501244),
@@ -60,6 +77,13 @@
     const sectionTileset = viewer.scene.primitives.add(
       new Cesium.Cesium3DTileset({
         url: Cesium.IonResource.fromAssetId(1501245),
+      })
+    );
+
+    const sectionImageTileset = viewer.scene.primitives.add(
+      new Cesium.Cesium3DTileset({
+        url: Cesium.IonResource.fromAssetId(1502607),
+        show: false,
       })
     );
 
@@ -85,6 +109,14 @@
 
     function m4() {
       pcdTileset.show = document.getElementById("m4").checked
+    }
+
+    function m5() {
+      liningPlaneTileset.show = document.getElementById("m5").checked
+    }
+
+    function m6() {
+      sectionImageTileset.show = document.getElementById("m6").checked
     }
 
   </script>
