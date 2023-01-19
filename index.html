@@ -24,6 +24,9 @@
     #div-toggle-section-model { z-index: 1; position: fixed; top: 210px; left: 10px; background-color: #303336; color: #edffff; font: 13.3px Arial; padding: 1px 6px; border-radius: 4px;}
     #div-toggle-section { z-index: 1; position: fixed; top: 250px; left: 10px; background-color: #303336; color: #edffff; font: 13.3px Arial; padding: 1px 6px; border-radius: 4px;}
     #div-toggle-pcd { z-index: 1; position: fixed; top: 290px; left: 10px; background-color: #303336; color: #edffff; font: 13.3px Arial; padding: 1px 6px; border-radius: 4px;}
+    #div-textarea { z-index: 1; position: fixed; top: 330px; left: 10px; background-color: #303336; color: #edffff; font: 13.3px Arial; padding: 6px 6px; border-radius: 4px; display: none;}
+    #button-ok {width: 48%; font: 13.3px Arial;}
+    #button-cancel {width: 48%; font: 13.3px Arial;}
   </style>
 </head>
 <body>
@@ -57,6 +60,12 @@
     <input type="checkbox" id="pcd" name="pcd" onchange="togglePcd()" checked/>
     <label for="pcd">美郷トンネル（点群）</label>
   </div>
+  <div id="div-textarea">
+    <textarea name="textarea" id="textarea" cols="20" rows="10"></textarea>
+    <br>
+    <input id="button-ok" type="button" onclick="OK()" value="ＯＫ">
+    <input id="button-cancel" type="button" onclick="Cancel()" value="キャンセル">
+  </div>
   <script>
     Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhNmJmMTkxYi0zNjBjLTRiZDctYTJjMi1kYWI4YTE0NDVhZWQiLCJpZCI6MTAwNzY1LCJpYXQiOjE2NTc1MzE3OTV9.DN7YBLuXtf9TCY6NLlM_en_KTPlDZJ2A1QajiGaK_fY';
 
@@ -77,6 +86,9 @@
     viewer.scene.globe.translucency.backFaceAlpha = 0.5;
     viewer.scene.globe.translucency.enabled = true;
     viewer.scene.screenSpaceCameraController.enableCollisionDetection = false;
+    viewer.scene.globe.depthTestAgainstTerrain = true;
+    viewer.screenSpaceEventHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
+    viewer.screenSpaceEventHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
 
     const liningTileset = viewer.scene.primitives.add(
       new Cesium.Cesium3DTileset({
@@ -153,6 +165,126 @@
           viewer.terrainProvider = vanillaTerrain
       }
     }
+
+    let scene = viewer.scene
+    let camera = viewer.camera
+    let polyline
+    let positions = [] // catresian3のみ
+    let drawing = false
+    let annotating = false
+    let startPosition;
+    let endPosition;
+    let currentPosition
+    let annotatingPosistion
+    let annotatingPoint
+
+    let handler = new Cesium.ScreenSpaceEventHandler(viewer.canvas)
+
+    function reset () {
+        drawing = false
+        annotating = false
+        positions = []
+        startPosition = null
+        endPosition = null
+        currentPosition = null
+    }
+
+    function handleLeft (event) {
+        const cartesian = scene.pickPosition(event.position)
+        console.log(scene.pickPositionSupported)
+        console.log(cartesian)
+        if (scene.pickPositionSupported && Cesium.defined(cartesian)) {
+            if (drawing) {
+            endPosition = cartesian
+            positions.push(endPosition)
+            viewer.entities.add({
+                polyline: {
+                    positions: positions,
+                    material: Cesium.Color.RED.withAlpha(0.5),
+                    width: 10,
+                }
+            })
+            reset()
+            } else {
+                drawing = true
+                startPosition = cartesian
+                positions.push(startPosition)
+            }
+        }
+    }
+
+    function handleRight (event) {
+        const cartesian = scene.pickPosition(event.position)
+        if (scene.pickPositionSupported && Cesium.defined(cartesian)) {
+            if (drawing) {
+                reset()
+            } else {
+                if (!annotating) {
+                    annotating = true
+                    const e = document.getElementById("div-textarea").style.display = "block"
+                    annotatingPosistion = cartesian
+                    annotatingPoint = viewer.entities.add({
+                        position: annotatingPosistion,
+                        point : {
+                            color : Cesium.Color.RED,
+                            pixelSize : 10,
+                        },
+                    })
+                }
+            }
+        }
+    }
+
+    function OK () {
+        const text = document.getElementById("textarea").value
+        viewer.entities.add({
+            position: annotatingPosistion,
+            label: {
+                text: text,
+                showBackground: true,
+                font: "14px Arial",
+                horizontalOrigin: Cesium.HorizontalOrigin.LEFT,
+                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+                disableDepthTestDistance: Number.POSITIVE_INFINITY,
+            }
+        })
+        annotating = false
+        annotatingPosistion = null
+        const e = document.getElementById("div-textarea").style.display = "none"
+        viewer.entities.remove(annotatingPoint)
+    }
+
+    function Cancel () {
+        annotating = false
+        annotatingPosistion = null
+        const e = document.getElementById("div-textarea").style.display = "none"
+        viewer.entities.remove(annotatingPoint)
+    }
+
+    function handleMove (event) {
+        const cartesian = scene.pickPosition(event.endPosition)
+        if (scene.pickPositionSupported && Cesium.defined(cartesian)) {
+            if (drawing) {
+                currentPosition = cartesian
+                positions.push(currentPosition)
+            }
+        }
+    }
+
+    handler.setInputAction(handleLeft, Cesium.ScreenSpaceEventType.LEFT_CLICK)
+    handler.setInputAction(handleRight, Cesium.ScreenSpaceEventType.RIGHT_CLICK)
+    handler.setInputAction(handleMove, Cesium.ScreenSpaceEventType.MOUSE_MOVE)
+
+    polyline = viewer.entities.add({
+        polyline: {
+            positions: new Cesium.CallbackProperty(function () {
+                return positions // positions変数を監視対象に
+            }, false),
+            material: Cesium.Color.RED,
+            width: 10,
+            loop: true
+        }
+    })
 
   </script>
  </div>
