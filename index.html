@@ -9,47 +9,70 @@
     body {
         margin: 0px;
         overflow: hidden;
+        height: 100vh;
     }
-    #check-m1 { z-index: 1; position: fixed; top: 10px; left: 10px; background-color: #303336; color: #edffff; font: 13.3px Arial; padding: 1px 6px; border-radius: 4px;}
-    #check-m5 { z-index: 1; position: fixed; top: 50px; left: 10px; background-color: #303336; color: #edffff; font: 13.3px Arial; padding: 1px 6px; border-radius: 4px;}
-    #check-m2 { z-index: 1; position: fixed; top: 90px; left: 10px; background-color: #303336; color: #edffff; font: 13.3px Arial; padding: 1px 6px; border-radius: 4px;}
-    #check-m3 { z-index: 1; position: fixed; top: 130px; left: 10px; background-color: #303336; color: #edffff; font: 13.3px Arial; padding: 1px 6px; border-radius: 4px;}
-    #check-m6 { z-index: 1; position: fixed; top: 170px; left: 10px; background-color: #303336; color: #edffff; font: 13.3px Arial; padding: 1px 6px; border-radius: 4px;}
-    #check-m4 { z-index: 1; position: fixed; top: 210px; left: 10px; background-color: #303336; color: #edffff; font: 13.3px Arial; padding: 1px 6px; border-radius: 4px;}
+    #cesiumContainer{
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+    }
+    #div-home { z-index: 1; position: fixed; top: 10px; left: 10px; background-color: #303336; color: #edffff; font: 13.3px Arial; padding: 1px 6px; border-radius: 4px;}
+    #div-toggle-terrain { z-index: 1; position: fixed; top: 50px; left: 10px; background-color: #303336; color: #edffff; font: 13.3px Arial; padding: 1px 6px; border-radius: 4px;}
+    #div-toggle-cracked-lining { z-index: 1; position: fixed; top: 90px; left: 10px; background-color: #303336; color: #edffff; font: 13.3px Arial; padding: 1px 6px; border-radius: 4px;}
+    #div-toggle-lining { z-index: 1; position: fixed; top: 130px; left: 10px; background-color: #303336; color: #edffff; font: 13.3px Arial; padding: 1px 6px; border-radius: 4px;}
+    #div-toggle-floor { z-index: 1; position: fixed; top: 170px; left: 10px; background-color: #303336; color: #edffff; font: 13.3px Arial; padding: 1px 6px; border-radius: 4px;}
+    #div-toggle-section-model { z-index: 1; position: fixed; top: 210px; left: 10px; background-color: #303336; color: #edffff; font: 13.3px Arial; padding: 1px 6px; border-radius: 4px;}
+    #div-toggle-section { z-index: 1; position: fixed; top: 250px; left: 10px; background-color: #303336; color: #edffff; font: 13.3px Arial; padding: 1px 6px; border-radius: 4px;}
+    #div-toggle-pcd { z-index: 1; position: fixed; top: 290px; left: 10px; background-color: #303336; color: #edffff; font: 13.3px Arial; padding: 1px 6px; border-radius: 4px;}
   </style>
 </head>
 <body>
   <div id="cesiumContainer"></div>
-  <div id="check-m1">
-    <input type="checkbox" id="m1" name="m1" onchange="m1()" checked/>
-    <label for="m1">美郷トンネル（覆工/ひび割れ表示）</label>
+  <input type="button" id="div-home" onclick="flyTo()" value="美郷トンネルへ"/>
+  <div id="div-toggle-terrain">
+    <input type="checkbox" id="terrain" name="terrain" onchange="toggleTerrain()" checked/>
+    <label for="terrain">地形</label>
   </div>
-  <div id="check-m5">
-    <input type="checkbox" id="m5" name="m5" onchange="m5()" />
-    <label for="m5">美郷トンネル（覆工）</label>
+  <div id="div-toggle-cracked-lining">
+    <input type="checkbox" id="cracked-lining" name="cracked-lining" onchange="toggleCrackedLining()" checked/>
+    <label for="cracked-lining">美郷トンネル（覆工/ひび割れ表示）</label>
   </div>
-  <div id="check-m2">
-    <input type="checkbox" id="m2" name="m2" onchange="m2()" checked/>
-    <label for="m2">美郷トンネル（路面）</label>
+  <div id="div-toggle-lining">
+    <input type="checkbox" id="lining" name="lining" onchange="toggleLining()"/>
+    <label for="lining">美郷トンネル（覆工）</label>
   </div>
-  <div id="check-m3">
-    <input type="checkbox" id="m3" name="m3" onchange="m3()" checked/>
-    <label for="m3">地質縦断図（モデル）</label>
+  <div id="div-toggle-floor">
+    <input type="checkbox" id="floor" name="floor" onchange="toggleFloor()" checked/>
+    <label for="floor">美郷トンネル（路面）</label>
   </div>
-  <div id="check-m6">
-    <input type="checkbox" id="m6" name="m6" onchange="m6()" />
-    <label for="m6">地質縦断図</label>
+  <div id="div-toggle-section-model">
+    <input type="checkbox" id="section-model" name="section-model" onchange="toggleSectionModel()" checked/>
+    <label for="section-model">地質縦断図（モデル）</label>
   </div>
-  <div id="check-m4">
-    <input type="checkbox" id="m4" name="m4" onchange="m4()" checked/>
-    <label for="m4">美郷トンネル（点群）</label>
+  <div id="div-toggle-section">
+    <input type="checkbox" id="section" name="section" onchange="toggleSection()"/>
+    <label for="section">地質縦断図</label>
+  </div>
+  <div id="div-toggle-pcd">
+    <input type="checkbox" id="pcd" name="pcd" onchange="togglePcd()" checked/>
+    <label for="pcd">美郷トンネル（点群）</label>
   </div>
   <script>
     Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhNmJmMTkxYi0zNjBjLTRiZDctYTJjMi1kYWI4YTE0NDVhZWQiLCJpZCI6MTAwNzY1LCJpYXQiOjE2NTc1MzE3OTV9.DN7YBLuXtf9TCY6NLlM_en_KTPlDZJ2A1QajiGaK_fY';
 
-    const viewer = new Cesium.Viewer('cesiumContainer', {
-      terrainProvider: Cesium.createWorldTerrain()
+    let vanillaTerrain;
+    let worldTerrain = Cesium.createWorldTerrain()
+
+    var viewer = new Cesium.Viewer('cesiumContainer', {
+        selectionIndicator: false,
+        baseLayerPicker : false,
     });
+
+    setTimeout(() => {
+        vanillaTerrain = viewer.terrainProvider
+        viewer.terrainProvider = worldTerrain
+    }, 1000)
+
     viewer.scene.globe.translucency.frontFaceAlpha = 0.5;
     viewer.scene.globe.translucency.backFaceAlpha = 0.5;
     viewer.scene.globe.translucency.enabled = true;
@@ -92,31 +115,43 @@
         url: Cesium.IonResource.fromAssetId(1497734),
       })
     );
-    
-    viewer.flyTo(liningTileset);
 
-    function m1() {
-      liningTileset.show = document.getElementById("m1").checked
+    function flyTo () {
+      viewer.flyTo(liningTileset);
     }
 
-    function m2() {
-      floorTileset.show = document.getElementById("m2").checked
+    flyTo()
+
+    function toggleCrackedLining() {
+      liningTileset.show = document.getElementById("cracked-lining").checked
     }
 
-    function m3() {
-      sectionTileset.show = document.getElementById("m3").checked
+    function toggleFloor() {
+      floorTileset.show = document.getElementById("floor").checked
     }
 
-    function m4() {
-      pcdTileset.show = document.getElementById("m4").checked
+    function toggleSectionModel() {
+      sectionTileset.show = document.getElementById("section-model").checked
     }
 
-    function m5() {
-      liningPlaneTileset.show = document.getElementById("m5").checked
+    function togglePcd() {
+      pcdTileset.show = document.getElementById("pcd").checked
     }
 
-    function m6() {
-      sectionImageTileset.show = document.getElementById("m6").checked
+    function toggleLining() {
+      liningPlaneTileset.show = document.getElementById("lining").checked
+    }
+
+    function toggleSection() {
+      sectionImageTileset.show = document.getElementById("section").checked
+    }
+
+    function toggleTerrain() {
+      if (document.getElementById("terrain").checked) {
+          viewer.terrainProvider = worldTerrain
+      } else {
+          viewer.terrainProvider = vanillaTerrain
+      }
     }
 
   </script>

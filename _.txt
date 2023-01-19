@@ -1,0 +1,37 @@
+    const liningTileset = viewer.scene.primitives.add(
+      new Cesium.Cesium3DTileset({
+        url: Cesium.IonResource.fromAssetId(1501242),
+      })
+    );
+
+    const liningPlaneTileset = viewer.scene.primitives.add(
+      new Cesium.Cesium3DTileset({
+        url: Cesium.IonResource.fromAssetId(1502608),
+        show: false,
+      })
+    );
+
+    const floorTileset = viewer.scene.primitives.add(
+      new Cesium.Cesium3DTileset({
+        url: Cesium.IonResource.fromAssetId(1501244),
+      })
+    );
+
+    const sectionTileset = viewer.scene.primitives.add(
+      new Cesium.Cesium3DTileset({
+        url: Cesium.IonResource.fromAssetId(1501245),
+      })
+    );
+
+    const sectionImageTileset = viewer.scene.primitives.add(
+      new Cesium.Cesium3DTileset({
+        url: Cesium.IonResource.fromAssetId(1502607),
+        show: false,
+      })
+    );
+
+    const pcdTileset = viewer.scene.primitives.add(
+      new Cesium.Cesium3DTileset({
+        url: Cesium.IonResource.fromAssetId(1497734),
+      })
+    );
